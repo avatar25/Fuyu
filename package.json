@@ -1,1 +1,4 @@
-# Placeholder for package.json
+{
+    "name": "fuyu",
+    "version": "0.1.0"
+}
