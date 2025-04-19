@@ -1,6 +1,29 @@
+# Ignore Python virtual environment
 venv
+
+# Ignore environment variables file
 .env
+
+# Ignore database files
 *.db
 *.sqlite
 *.sqlite3
 *.db3
+
+# Ignore Node.js dependencies
+node_modules
+
+# Ignore log files
+*.log
+
+# Ignore compiled Python files
+__pycache__/
+*.py[cod]
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.swo
