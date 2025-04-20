@@ -43,8 +43,8 @@ def create_budget(db: Session, budget: schemas.BudgetCreate):
     db.refresh(db_budget)
     return db_budget
 
-def get_budgets(db: Session):
-    return db.query(models.Budget).all()
+def get_budgets(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(models.Budget).offset(skip).limit(limit).all()
 
 def get_budget_by_id(db: Session, budget_id: int):
     budget = db.query(models.Budget).filter(models.Budget.id == budget_id).first()
@@ -82,8 +82,8 @@ def delete_category(db: Session, category: str):
     db.commit()
     return {"detail": "Category deleted successfully"}
 
-def get_categories(db: Session):
-    return db.query(models.Budget).all()
+def get_categories(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(models.Budget).offset(skip).limit(limit).all()
 
 def get_category_by_id(db: Session, category_id: int):
     category = db.query(models.Budget).filter(models.Budget.id == category_id).first()
