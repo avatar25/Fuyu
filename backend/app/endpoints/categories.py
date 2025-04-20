@@ -16,8 +16,8 @@ def delete_category(category: str, db: Session = Depends(get_db)):
     return crud.delete_category(db=db, category=category)
 
 @router.get("/categories/", response_model=list)
-def get_categories(db: Session = Depends(get_db)):
-    return crud.get_categories(db=db)
+def get_categories(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    return crud.get_categories(db=db, skip=skip, limit=limit)
 
 @router.get("/categories/{category_id}")
 def get_category_by_id(category_id: int, db: Session = Depends(get_db)):
