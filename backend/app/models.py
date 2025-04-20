@@ -21,3 +21,12 @@ class Budget(Base):
     id = Column(Integer, primary_key=True, index=True)
     category = Column(String, unique=True, nullable=False)
     amount = Column(Float, nullable=False)
+
+class Category(Base):
+    __tablename__ = "categories"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, nullable=False)
+    budget_id = Column(Integer, ForeignKey("budgets.id"))
+
+    budget = relationship("Budget", back_populates="categories")

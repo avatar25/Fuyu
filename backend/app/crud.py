@@ -66,7 +66,7 @@ def delete_budget(db: Session, budget_id: int):
     db.commit()
     return {"detail": "Budget deleted successfully"}
 
-# CRUD for Categories (Assuming categories are managed independently)
+# CRUD for Categories
 def create_category(db: Session, category: str):
     db_category = models.Budget(category=category, amount=0)
     db.add(db_category)
@@ -81,3 +81,19 @@ def delete_category(db: Session, category: str):
     db.delete(category_to_delete)
     db.commit()
     return {"detail": "Category deleted successfully"}
+
+def get_categories(db: Session):
+    return db.query(models.Budget).all()
+
+def get_category_by_id(db: Session, category_id: int):
+    category = db.query(models.Budget).filter(models.Budget.id == category_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return category
+
+def update_category(db: Session, category_id: int, category_update: str):
+    category = get_category_by_id(db, category_id)
+    category.category = category_update
+    db.commit()
+    db.refresh(category)
+    return category
