@@ -23,7 +23,6 @@ Fuyu is a personal wealth tracking application that helps you monitor your finan
     brew services start postgresql@14
     ```
 
-
 2. Create and activate a virtual environment:
    ```bash
    python -m venv venv
@@ -87,15 +86,27 @@ The application will be available at http://localhost:3000
 
 If you prefer using Docker:
 
-1. Build and start the containers:
+1. Copy environment variable files for both backend and frontend:
    ```bash
-   docker-compose up -d
+   cp backend/.env.example backend/.env
+   cp frontend/.env.example frontend/.env
+   ```
+   Edit the `.env` files as needed for your configuration.
+
+2. Build and start the containers:
+   ```bash
+   docker compose up --build -d
    ```
 
-2. Access the application:
+3. Access the application:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
    - API documentation: http://localhost:8000/docs
+
+4. To stop the containers:
+   ```bash
+   docker compose down
+   ```
 
 ## Development
 
