@@ -1,14 +1,24 @@
 # backend/app/main.py
 
+import os
 from fastapi import FastAPI
-from . import models
-from .db import engine
+from fastapi.middleware.cors import CORSMiddleware
 from .endpoints import expenses, budgets, categories
+from .db import Base  # Import Base from db.py to avoid duplicate Base
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
-# Create tables
-models.Base.metadata.create_all(bind=engine)
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change to your frontend's URL in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include routers for expenses, budgets, and categories
 app.include_router(expenses.router, prefix="/api", tags=["Expenses"])
