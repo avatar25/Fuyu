@@ -144,3 +144,70 @@ def update_category(db: Session, category_id: int, category_update: str):
     db.commit()
     db.refresh(category)
     return category
+
+# CRUD for Savings Goals
+def create_savings_goal(db: Session, goal: schemas.SavingsGoalCreate):
+    db_goal = models.SavingsGoal(**goal.dict())
+    db.add(db_goal)
+    db.commit()
+    db.refresh(db_goal)
+    return db_goal
+
+def get_savings_goals(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(models.SavingsGoal).offset(skip).limit(limit).all()
+
+def get_savings_goal(db: Session, goal_id: int):
+    goal = db.query(models.SavingsGoal).filter(models.SavingsGoal.id == goal_id).first()
+    if not goal:
+        raise HTTPException(status_code=404, detail="Savings goal not found")
+    return goal
+
+def update_savings_goal(db: Session, goal_id: int, goal_update: schemas.SavingsGoalCreate):
+    goal = get_savings_goal(db, goal_id)
+    for key, value in goal_update.dict().items():
+        setattr(goal, key, value)
+    db.commit()
+    db.refresh(goal)
+    return goal
+
+def delete_savings_goal(db: Session, goal_id: int):
+    goal = get_savings_goal(db, goal_id)
+    db.delete(goal)
+    db.commit()
+    return {"detail": "Savings goal deleted successfully"}
+
+
+def expenses_by_month(db: Session):
+    results = (
+        db.query(
+            models.Expense.date,
+            models.Expense.amount,
+        )
+        .all()
+    )
+    summary = {}
+    for date, amount in results:
+        key = date.strftime("%Y-%m")
+        summary[key] = summary.get(key, 0) + amount
+    return summary
+
+
+def expenses_by_category(db: Session):
+    results = (
+        db.query(models.Expense.category, models.Expense.amount).all()
+    )
+    summary = {}
+    for category, amount in results:
+        summary[category] = summary.get(category, 0) + amount
+    return summary
+
+
+def expenses_daily(db: Session):
+    results = (
+        db.query(models.Expense.date, models.Expense.amount).all()
+    )
+    summary = {}
+    for date, amount in results:
+        key = date.strftime("%Y-%m-%d")
+        summary[key] = summary.get(key, 0) + amount
+    return summary

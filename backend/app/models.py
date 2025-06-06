@@ -50,3 +50,13 @@ class ExpenseHistory(Base):
     changed_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     expense = relationship("Expense", back_populates="histories")
+
+
+class SavingsGoal(Base):
+    __tablename__ = "savings_goals"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    target_amount = Column(Float, nullable=False)
+    saved_amount = Column(Float, default=0)
+    target_date = Column(DateTime, nullable=False)

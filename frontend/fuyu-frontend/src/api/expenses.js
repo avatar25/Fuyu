@@ -24,3 +24,18 @@ export const addExpense = async (expenseData) => {
   }
 };
 
+export const getMonthlySummary = async () => {
+  const res = await axios.get(`${BASE_URL}/expenses/summary/monthly`);
+  return res.data;
+};
+
+export const getCategorySummary = async () => {
+  const res = await axios.get(`${BASE_URL}/expenses/summary/category`);
+  return res.data;
+};
+
+export const getDailySummary = async () => {
+  const res = await axios.get(`${BASE_URL}/expenses/summary/daily`);
+  return res.data;
+};
+

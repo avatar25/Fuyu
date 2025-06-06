@@ -37,3 +37,18 @@ def read_expense_history(expense_id: int, db: Session = Depends(get_db)):
 def generate_recurring(confirm: bool = False, db: Session = Depends(get_db)):
     return crud.generate_recurring_expenses(db=db, confirm=confirm)
 
+
+@router.get("/expenses/summary/monthly")
+def summary_monthly(db: Session = Depends(get_db)):
+    return crud.expenses_by_month(db)
+
+
+@router.get("/expenses/summary/category")
+def summary_category(db: Session = Depends(get_db)):
+    return crud.expenses_by_category(db)
+
+
+@router.get("/expenses/summary/daily")
+def summary_daily(db: Session = Depends(get_db)):
+    return crud.expenses_daily(db)
+
