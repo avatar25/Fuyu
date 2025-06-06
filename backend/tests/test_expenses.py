@@ -1,11 +1,15 @@
 # Unit Tests for CRUD Operations in Fuyu App
 # Using `pytest` to test the CRUD functionality for the backend
 
+import os
 import pytest
 from sqlalchemy import create_engine
+import datetime
 from sqlalchemy.orm import sessionmaker
+
+os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 from backend.app.db import Base, get_db
-from backend.app.models import Expense, Budget, ExpenseHistory
+from backend.app.models import Expense, Budget, ExpenseHistory, SavingsGoal
 from backend.app.crud import (
     create_expense,
     get_expenses,
@@ -14,8 +18,10 @@ from backend.app.crud import (
     update_expense,
     get_expense_history,
     generate_recurring_expenses,
+    create_savings_goal,
+    get_savings_goals,
 )
-from backend.app.schemas import ExpenseCreate, BudgetCreate
+from backend.app.schemas import ExpenseCreate, BudgetCreate, SavingsGoalCreate
 
 # Create an in-memory SQLite database for testing purposes
 test_engine = create_engine("sqlite:///:memory:")
@@ -91,6 +97,14 @@ def test_generate_recurring_expenses(test_db):
     generated = generate_recurring_expenses(test_db, confirm=True)
     assert len(generated) == 1
     assert generated[0].id is not None
+
+
+def test_create_savings_goal(test_db):
+    goal_data = SavingsGoalCreate(name="Trip", target_amount=1000.0, saved_amount=200.0, target_date=datetime.datetime.utcnow())
+    goal = create_savings_goal(test_db, goal_data)
+    goals = get_savings_goals(test_db)
+    assert goal.id is not None
+    assert len(goals) == 1
 
 if __name__ == "__main__":
     pytest.main()

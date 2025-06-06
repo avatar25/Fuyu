@@ -47,3 +47,21 @@ class ExpenseHistory(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SavingsGoalCreate(BaseModel):
+    name: constr(strip_whitespace=True, min_length=1)
+    target_amount: float = Field(..., gt=0)
+    saved_amount: float = 0
+    target_date: datetime.datetime
+
+
+class SavingsGoal(BaseModel):
+    id: int
+    name: str
+    target_amount: float
+    saved_amount: float
+    target_date: datetime.datetime
+
+    class Config:
+        from_attributes = True
