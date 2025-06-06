@@ -26,3 +26,14 @@ def update_expense(expense_id: int, expense_update: schemas.ExpenseCreate, db: S
 @router.delete("/expenses/{expense_id}")
 def delete_expense(expense_id: int, db: Session = Depends(get_db)):
     return crud.delete_expense(db=db, expense_id=expense_id)
+
+
+@router.get("/expenses/{expense_id}/history", response_model=list[schemas.ExpenseHistory])
+def read_expense_history(expense_id: int, db: Session = Depends(get_db)):
+    return crud.get_expense_history(db=db, expense_id=expense_id)
+
+
+@router.post("/expenses/generate_recurring", response_model=list[schemas.Expense])
+def generate_recurring(confirm: bool = False, db: Session = Depends(get_db)):
+    return crud.generate_recurring_expenses(db=db, confirm=confirm)
+

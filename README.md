@@ -5,6 +5,11 @@ Personal wealth tracker
 
 Fuyu is a personal wealth tracking application that helps you monitor your financial assets, track expenses, and visualize your financial growth over time.
 
+### Core Features
+- **Recurring Expenses**: mark transactions as recurring and auto-generate them each month with confirmation.
+- **Budget Rollover**: optionally carry forward unused budget amounts per category.
+- **Edit History**: every change to an expense is stored, allowing you to view previous versions.
+
 ## Prerequisites
 
 - Python 3.9+

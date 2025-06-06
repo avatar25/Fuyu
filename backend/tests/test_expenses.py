@@ -5,8 +5,16 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from backend.app.db import Base, get_db
-from backend.app.models import Expense, Budget
-from backend.app.crud import create_expense, get_expenses, create_budget, get_budgets
+from backend.app.models import Expense, Budget, ExpenseHistory
+from backend.app.crud import (
+    create_expense,
+    get_expenses,
+    create_budget,
+    get_budgets,
+    update_expense,
+    get_expense_history,
+    generate_recurring_expenses,
+)
 from backend.app.schemas import ExpenseCreate, BudgetCreate
 
 # Create an in-memory SQLite database for testing purposes
@@ -47,10 +55,18 @@ def test_create_and_get_expenses(test_db):
     assert expenses[0].category == "Utilities"
     assert expenses[0].amount == 150.0
 
+    # Update the expense and verify history is created
+    update_data = ExpenseCreate(amount=200.0, category="Utilities", description="Electricity bill updated", is_recurring=False)
+    updated = update_expense(test_db, created_expense.id, update_data)
+    history = get_expense_history(test_db, created_expense.id)
+    assert updated.amount == 200.0
+    assert len(history) == 1
+    assert history[0].amount == 150.0
+
 # Test for creating and retrieving budgets
 def test_create_and_get_budgets(test_db):
     # Arrange: Create a budget object
-    budget_data = BudgetCreate(category="Groceries", amount=500.0)
+    budget_data = BudgetCreate(category="Groceries", amount=500.0, rollover_enabled=True)
     
     # Act: Add the budget to the database
     created_budget = create_budget(test_db, budget_data)
@@ -67,6 +83,14 @@ def test_create_and_get_budgets(test_db):
     assert len(budgets) == 1
     assert budgets[0].category == "Groceries"
     assert budgets[0].amount == 500.0
+    assert budgets[0].rollover_enabled is True
+
+def test_generate_recurring_expenses(test_db):
+    expense = ExpenseCreate(amount=50.0, category="Subscription", description="Music", is_recurring=True)
+    created = create_expense(test_db, expense)
+    generated = generate_recurring_expenses(test_db, confirm=True)
+    assert len(generated) == 1
+    assert generated[0].id is not None
 
 if __name__ == "__main__":
     pytest.main()

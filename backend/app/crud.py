@@ -3,6 +3,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from . import models, schemas
+import datetime
 
 # CRUD for Expenses
 def create_expense(db: Session, expense: schemas.ExpenseCreate):
@@ -23,8 +24,20 @@ def get_expense_by_id(db: Session, expense_id: int):
 
 def update_expense(db: Session, expense_id: int, expense_update: schemas.ExpenseCreate):
     expense = get_expense_by_id(db, expense_id)
+
+    # Save current state to history before updating
+    history = models.ExpenseHistory(
+        expense_id=expense.id,
+        amount=expense.amount,
+        category=expense.category,
+        description=expense.description,
+        date=expense.date,
+    )
+    db.add(history)
+
     for key, value in expense_update.dict().items():
         setattr(expense, key, value)
+
     db.commit()
     db.refresh(expense)
     return expense
@@ -34,6 +47,40 @@ def delete_expense(db: Session, expense_id: int):
     db.delete(expense)
     db.commit()
     return {"detail": "Expense deleted successfully"}
+
+def get_expense_history(db: Session, expense_id: int):
+    get_expense_by_id(db, expense_id)  # Ensure expense exists
+    return (
+        db.query(models.ExpenseHistory)
+        .filter(models.ExpenseHistory.expense_id == expense_id)
+        .order_by(models.ExpenseHistory.changed_at.desc())
+        .all()
+    )
+
+def generate_recurring_expenses(db: Session, confirm: bool = False):
+    """Return upcoming recurring expenses. If confirm is True, create them."""
+    next_month = datetime.datetime.utcnow().replace(day=1) + datetime.timedelta(days=32)
+    next_month = next_month.replace(day=1)
+    recurring = db.query(models.Expense).filter(models.Expense.is_recurring == True).all()
+
+    generated = []
+    for exp in recurring:
+        new_expense = models.Expense(
+            amount=exp.amount,
+            category=exp.category,
+            description=exp.description,
+            date=next_month,
+            is_recurring=True,
+        )
+        generated.append(new_expense)
+        if confirm:
+            db.add(new_expense)
+
+    if confirm and generated:
+        db.commit()
+        for e in generated:
+            db.refresh(e)
+    return generated
 
 # CRUD for Budgets
 def create_budget(db: Session, budget: schemas.BudgetCreate):
