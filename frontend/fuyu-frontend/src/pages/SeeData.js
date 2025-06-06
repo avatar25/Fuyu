@@ -19,7 +19,7 @@ function SeeData() {
   }, []);
 
   return (
-    <div>
+    <div className="form">
       <h1>Expenses Summary</h1>
       <ul>
         {expenses.map((expense) => (
