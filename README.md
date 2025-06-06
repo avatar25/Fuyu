@@ -10,6 +10,33 @@ Fuyu is a personal wealth tracking application that helps you monitor your finan
 - **Budget Rollover**: optionally carry forward unused budget amounts per category.
 - **Edit History**: every change to an expense is stored, allowing you to view previous versions.
 
+## Quick Start with Docker
+
+The easiest way to try Fuyu is with Docker. The repository ships with a
+`docker-compose.yml` that starts a Postgres database, the FastAPI backend and
+the React frontend.
+
+1. Copy the backend environment file:
+   ```bash
+   cp backend/.env.example backend/.env
+   ```
+   The default values will work for local testing.
+
+2. Build and run all services:
+   ```bash
+   docker compose up --build
+   ```
+
+3. Open the application:
+   - Frontend: <http://localhost:3000>
+   - API: <http://localhost:8000>
+   - API docs: <http://localhost:8000/docs>
+
+4. Stop the containers when you're done:
+   ```bash
+   docker compose down
+   ```
+
 ## Prerequisites
 
 - Python 3.9+
@@ -86,32 +113,6 @@ npm run dev
 ```
 
 The application will be available at http://localhost:3000
-
-## Running with Docker (Optional)
-
-If you prefer using Docker:
-
-1. Copy environment variable files for both backend and frontend:
-   ```bash
-   cp backend/.env.example backend/.env
-   cp frontend/.env.example frontend/.env
-   ```
-   Edit the `.env` files as needed for your configuration.
-
-2. Build and start the containers:
-   ```bash
-   docker compose up --build -d
-   ```
-
-3. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API documentation: http://localhost:8000/docs
-
-4. To stop the containers:
-   ```bash
-   docker compose down
-   ```
 
 ## Development
 
