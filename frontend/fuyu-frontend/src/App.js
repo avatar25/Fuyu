@@ -9,14 +9,16 @@ import Goals from './pages/Goals';
 
 function App() {
   return (
-    <div>
-      <h1>Fuyu App</h1>
-      <nav style={{ marginBottom: '20px' }}>
-        <Link to="/add" style={{ marginRight: '10px' }}>Add Expense</Link>
-        <Link to="/view" style={{ marginRight: '10px' }}>See Expenses</Link>
-        <Link to="/trends" style={{ marginRight: '10px' }}>Trends</Link>
-        <Link to="/goals">Goals</Link>
-      </nav>
+    <div className="app-container">
+      <header>
+        <h1>Fuyu App</h1>
+        <nav>
+          <Link className="nav-link" to="/add">Add Expense</Link>
+          <Link className="nav-link" to="/view">See Expenses</Link>
+          <Link className="nav-link" to="/trends">Trends</Link>
+          <Link className="nav-link" to="/goals">Goals</Link>
+        </nav>
+      </header>
       <Routes>
         <Route path="/add" element={<AddData />} />
         <Route path="/view" element={<SeeData />} />

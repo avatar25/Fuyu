@@ -25,9 +25,9 @@ function Goals() {
   };
 
   return (
-    <div>
+    <div className="form">
       <h2>Savings Goals</h2>
-      <form onSubmit={submit}>
+      <form onSubmit={submit} className="form-group">
         <input placeholder="Name" value={name} onChange={e=>setName(e.target.value)} />
         <input placeholder="Target" type="number" value={target} onChange={e=>setTarget(e.target.value)} />
         <input type="date" value={date} onChange={e=>setDate(e.target.value)} />

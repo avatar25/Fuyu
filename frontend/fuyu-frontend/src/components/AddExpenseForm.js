@@ -24,8 +24,8 @@ function AddExpenseForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form className="form" onSubmit={handleSubmit}>
+      <div className="form-group">
         <label>Amount:</label>
         <input
           type="number"
@@ -34,7 +34,7 @@ function AddExpenseForm() {
           required
         />
       </div>
-      <div>
+      <div className="form-group">
         <label>Category:</label>
         <input
           type="text"
@@ -43,7 +43,7 @@ function AddExpenseForm() {
           required
         />
       </div>
-      <div>
+      <div className="form-group">
         <label>Description:</label>
         <input
           type="text"
